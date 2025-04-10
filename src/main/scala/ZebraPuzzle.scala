@@ -10,33 +10,26 @@ object ZebraPuzzle:
    case class Solution(waterDrinker: Resident, zebraOwner: Resident)
 
    lazy val solve: Solution =
-      val residents = List(Englishman, Spaniard, Ukrainian, Norwegian, Japanese)
-      val colors = List("Red", "Green", "Ivory", "Yellow", "Blue")
-      val pets = List("Dog", "Snail", "Fox", "Horse", "Zebra")
-      val beverages = List("Coffee", "Tea", "Milk", "Orange juice", "Water")
-      val hobbies = List("Dancing", "Reading", "Painter", "Chess", "Football")
-      val sols = for
-         resident <- residents.permutations
-         if resident.indexOf(Norwegian) == 0 // statement 10
-         pet <- pets.permutations
-         if pet.indexOf("Dog") == resident.indexOf(Spaniard) // statement 3
-         hobby <- hobbies.permutations
-         if hobby.indexOf("Chess") == resident.indexOf(Japanese) // statement 14
-            && hobby.indexOf("Dancing") == pet.indexOf("Snail") // statement 7
-            && (hobby.indexOf("Reading") == pet.indexOf("Fox") - 1
-               || hobby.indexOf("Reading") == pet.indexOf("Fox") + 1) // statement 11
-            && (hobby.indexOf("Painter") == pet.indexOf("Horse") - 1
-               || hobby.indexOf("Painter") == pet.indexOf("Horse") + 1) // statement 12
-         color <- colors.permutations
-         if color.indexOf("Blue") == 1 // statement 15
-            && color.indexOf("Red") == resident.indexOf(Englishman) // statement 2
-            && color.indexOf("Green") == color.indexOf("Ivory") + 1 // statement 6
-            && color.indexOf("Yellow") == hobby.indexOf("Painter") // statement 8
-         beverage <- beverages.permutations
-         if beverage.indexOf("Milk") == 2 // statement 9
-            && beverage.indexOf("Coffee") == color.indexOf("Green") // statement 4
-            && beverage.indexOf("Tea") == resident.indexOf(Ukrainian) // Statement 5
-            && beverage.indexOf("Orange juice") == hobby.indexOf("Football") // statement 13
-      yield Solution(resident(beverage.indexOf("Water")), resident(pet.indexOf("Zebra"))) // Question
-
-      sols.toSeq.head
+      (for
+         residents <- List(Englishman, Spaniard, Ukrainian, Norwegian, Japanese).permutations
+         if residents.indexOf(Norwegian) == 0 // statement 10
+         pets <- List("Dog", "Snail", "Fox", "Horse", "Zebra").permutations
+         if pets.indexOf("Dog") == residents.indexOf(Spaniard) // statement 3
+         hobbies <- List("Dancing", "Reading", "Painter", "Chess", "Football").permutations
+         if hobbies.indexOf("Chess") == residents.indexOf(Japanese) // statement 14
+            && hobbies.indexOf("Dancing") == pets.indexOf("Snail") // statement 7
+            && (hobbies.indexOf("Reading") == pets.indexOf("Fox") - 1
+               || hobbies.indexOf("Reading") == pets.indexOf("Fox") + 1) // statement 11
+            && (hobbies.indexOf("Painter") == pets.indexOf("Horse") - 1
+               || hobbies.indexOf("Painter") == pets.indexOf("Horse") + 1) // statement 12
+         colors <- List("Red", "Green", "Ivory", "Yellow", "Blue").permutations
+         if colors.indexOf("Blue") == 1 // statement 15
+            && colors.indexOf("Red") == residents.indexOf(Englishman) // statement 2
+            && colors.indexOf("Green") == colors.indexOf("Ivory") + 1 // statement 6
+            && colors.indexOf("Yellow") == hobbies.indexOf("Painter") // statement 8
+         beverages <- List("Coffee", "Tea", "Milk", "Orange juice", "Water").permutations
+         if beverages.indexOf("Milk") == 2 // statement 9
+            && beverages.indexOf("Coffee") == colors.indexOf("Green") // statement 4
+            && beverages.indexOf("Tea") == residents.indexOf(Ukrainian) // Statement 5
+            && beverages.indexOf("Orange juice") == hobbies.indexOf("Football") // statement 13
+      yield Solution(residents(beverages.indexOf("Water")), residents(pets.indexOf("Zebra")))).next()
